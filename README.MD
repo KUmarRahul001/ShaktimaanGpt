@@ -24,12 +24,12 @@ Shaktimaan GPT (S.H.A.K.T.I. M.A.A.N. GPT) is an advanced AI system leveraging G
 
 - **Project Manager:** Rahul Kumar
 - **Front-end Developer:** Rahul Kumar
-- **Back-end Developer:**Rahul Kumar
+- **Back-end Developer:** Rahul Kumar
 - **Machine Learning Engineer:** Rahul Kumar
 - **Database Administrator:** Rahul Kumar
 - **UX/UI Designer:** Simar Kaur
 - **DevOps Engineer:** Simar Kaur
-- **Security Specialist:**Simar Kaur
+- **Security Specialist:** Simar Kaur
 - **QA Engineer:** Simar Kaur
 - **Technical Writer:** Simar Kaur
 - **Support Specialist:** Simar Kaur
