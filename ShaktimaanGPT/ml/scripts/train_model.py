@@ -2,7 +2,7 @@ from datasets import load_dataset, load_metric
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering, Trainer, TrainingArguments
 
 # Load the dataset
-dataset = load_dataset('squad')
+dataset = load_dataset('squad ',trust_remote_code=True)
 
 # Load a tokenizer and model for question answering
 tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
