@@ -16,6 +16,16 @@ function App() {
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Check if we have a recovery token in the URL hash (from password reset email)
+    // Sometimes Supabase redirects to root instead of the requested redirectTo URL
+    const hash = window.location.hash;
+    // We check window.location.pathname to avoid infinite redirects if we are already on /reset-password
+    if (hash && hash.includes('type=recovery') && window.location.pathname !== '/reset-password') {
+      // Redirect to the reset password page with the hash intact
+      window.location.href = `/reset-password${hash}`;
+      return;
+    }
+
     // Check if user is already authenticated
     const checkAuth = async () => {
       try {
@@ -34,6 +44,11 @@ function App() {
     // Set up auth state change listener
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        if (event === 'PASSWORD_RECOVERY' && window.location.pathname !== '/reset-password') {
+          // If the event fires before the hash check above, or during a session
+          window.location.href = `/reset-password${window.location.hash}`;
+          return;
+        }
         setIsAuthenticated(!!session);
         if (session) setAuthError(null);
       }
