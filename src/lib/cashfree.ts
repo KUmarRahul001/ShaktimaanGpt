@@ -7,6 +7,7 @@ interface PaymentDetails {
   customerEmail: string;
   customerPhone?: string;
   customerName?: string;
+  userId: string;
 }
 
 export async function createPaymentOrder(details: PaymentDetails) {
@@ -40,6 +41,7 @@ export async function createPaymentOrder(details: PaymentDetails) {
         customerEmail: details.customerEmail,
         customerPhone: details.customerPhone,
         customerName: details.customerName,
+        userId: details.userId,
       }),
     });
 

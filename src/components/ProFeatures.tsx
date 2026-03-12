@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 import { Crown, Image, MessageSquare, Zap, CheckCircle, ArrowLeft, AlertCircle, QrCode } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
-import { getCurrentUser, updateProStatus } from '../lib/supabase';
+import { getCurrentUser, getUserProfile } from '../lib/supabase';
+import { createPaymentOrder } from '../lib/cashfree';
+import { load } from '@cashfreepayments/cashfree-js';
 
 const ProFeatures: React.FC = () => {
   const navigate = useNavigate();
@@ -38,16 +40,39 @@ const ProFeatures: React.FC = () => {
         throw new Error('Please sign in to continue');
       }
 
-      // Update user's pro status
-      await updateProStatus(user.id, true, new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString());
+      const userProfile = await getUserProfile(user.id);
+
+      // Create a unique order ID
+      const orderId = `order_${user.id}_${Date.now()}`;
       
-      // Navigate to success page
-      navigate('/payment-status?status=success');
+      // Call createPaymentOrder to get Cashfree payment session ID
+      const paymentOrder = await createPaymentOrder({
+        orderId,
+        orderAmount: 120, // ₹120 per month
+        orderCurrency: 'INR',
+        customerEmail: userProfile?.email || user.email || '',
+        customerPhone: userProfile?.phone_number || '9999999999',
+        customerName: userProfile?.display_name || userProfile?.email?.split('@')[0] || 'User',
+        userId: user.id,
+      });
+
+      if (!paymentOrder || !paymentOrder.payment_session_id) {
+        throw new Error('Failed to create payment session.');
+      }
+
+      // Initialize Cashfree SDK
+      const cashfree = await load({
+        mode: 'production', // Use production as specified
+      });
+
+      // Redirect to Cashfree checkout. returnUrl is configured in backend.
+      cashfree.checkout({
+        paymentSessionId: paymentOrder.payment_session_id,
+      });
+
     } catch (error) {
       console.error('Payment error:', error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-      navigate('/payment-status?status=error');
-    } finally {
       setIsProcessing(false);
     }
   };

@@ -7,6 +7,7 @@ import ContactUs from './components/ContactUs';
 import TermsAndConditions from './components/TermsAndConditions';
 import RefundPolicy from './components/RefundPolicy';
 import PaymentStatus from './components/PaymentStatus';
+import ResetPassword from './components/ResetPassword';
 import { supabase, getCurrentUser } from './lib/supabase';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
@@ -82,6 +83,7 @@ function App() {
         <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/payment-status" element={<PaymentStatus />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </Router>
   );
