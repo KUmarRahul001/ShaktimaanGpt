@@ -289,7 +289,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
                 </div>
 
                 <motion.div
-                  className="mb-6 p-4 bg-gray-900/50 rounded-lg"
+                  className="mb-6 bg-gray-900/50 rounded-lg overflow-hidden"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ 
                     opacity: passwordFocused || password ? 1 : 0,
@@ -297,24 +297,26 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
                   }}
                   transition={{ duration: 0.3 }}
                 >
-                  <h3 className="text-sm font-medium text-gray-300 mb-2">Password Requirements:</h3>
-                  <ul className="space-y-2">
-                    {passwordRequirements.map((req, index) => (
-                      <li 
-                        key={index}
-                        className="flex items-center text-sm"
-                      >
-                        {req.test(password) ? (
-                          <Check size={16} className="text-green-500 mr-2" />
-                        ) : (
-                          <X size={16} className="text-red-500 mr-2" />
-                        )}
-                        <span className={req.test(password) ? 'text-green-400' : 'text-gray-400'}>
-                          {req.label}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="p-4">
+                    <h3 className="text-sm font-medium text-gray-300 mb-2">Password Requirements:</h3>
+                    <ul className="space-y-2">
+                      {passwordRequirements.map((req, index) => (
+                        <li
+                          key={index}
+                          className="flex items-center text-sm"
+                        >
+                          {req.test(password) ? (
+                            <Check size={16} className="text-green-500 mr-2" />
+                          ) : (
+                            <X size={16} className="text-red-500 mr-2" />
+                          )}
+                          <span className={req.test(password) ? 'text-green-400' : 'text-gray-400'}>
+                            {req.label}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </motion.div>
               </>
             )}
