@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 
 // Initialize the Gemini API with your API key
-const API_KEY = "AIzaSyBKMt-tpqUKiSBg_mAkP2cLkrLYKrMBPj0";
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
 
 // Create and configure the Generative AI instance
 const genAI = new GoogleGenerativeAI(API_KEY);
@@ -62,6 +62,10 @@ function formatMessagesForGemini(messages: ChatMessage[]) {
  * @returns Promise resolving to the generated response text
  */
 export async function generateResponse(messages: ChatMessage[]): Promise<string> {
+  if (!API_KEY) {
+    return "API key is missing. Please check your configuration.";
+  }
+
   try {
     console.log(`[Gemini] Generating response using ${MODEL_NAME} model`);
     console.log(`[Gemini] Message count: ${messages.length}`);
@@ -172,6 +176,11 @@ export async function generateResponse(messages: ChatMessage[]): Promise<string>
  * @returns Promise resolving to a boolean indicating if the connection is successful
  */
 export async function verifyGeminiConnection(): Promise<boolean> {
+  if (!API_KEY) {
+    console.error("[Gemini] API key is missing. Please set VITE_GEMINI_API_KEY.");
+    return false;
+  }
+
   try {
     console.log("[Gemini] Verifying API connection...");
     
