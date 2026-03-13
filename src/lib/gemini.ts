@@ -56,7 +56,7 @@ export async function generateResponse(messages: ChatMessage[]): Promise<string>
  * Verifies the Gemini API connection
  * @returns Promise resolving to a boolean indicating if the connection is successful
  */
-export async function verifyGeminiConnection(): Promise<boolean> {
+export async function verifyGeminiConnection(): Promise<boolean | 'usage_exceeded'> {
   try {
     const response = await fetch('/.netlify/functions/gemini-chat', {
       method: 'POST',
@@ -65,6 +65,10 @@ export async function verifyGeminiConnection(): Promise<boolean> {
       },
       body: JSON.stringify({ action: "verify" }),
     });
+
+    if (response.status === 503) {
+      return 'usage_exceeded';
+    }
 
     if (!response.ok) {
       console.error("[Gemini Client] Connection verification failed with status:", response.status);

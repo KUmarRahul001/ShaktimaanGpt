@@ -36,7 +36,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const [apiStatus, setApiStatus] = useState<'checking' | 'connected' | 'error'>('checking');
+  const [apiStatus, setApiStatus] = useState<'checking' | 'connected' | 'error' | 'usage_exceeded'>('checking');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chatHistories, setChatHistories] = useState<ChatHistoryType[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
@@ -72,8 +72,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
   useEffect(() => {
     const checkApiConnection = async () => {
       try {
-        const isConnected = await verifyGeminiConnection();
-        setApiStatus(isConnected ? 'connected' : 'error');
+        const connectionStatus = await verifyGeminiConnection();
+        if (connectionStatus === true) {
+          setApiStatus('connected');
+        } else if (connectionStatus === 'usage_exceeded') {
+          setApiStatus('usage_exceeded');
+        } else {
+          setApiStatus('error');
+        }
       } catch (error) {
         console.error('API connection check failed:', error);
         setApiStatus('error');
@@ -238,9 +244,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
                   <CheckCircle2 size={16} /> Connected
                 </span>
               )}
-              {apiStatus === 'error' && (
+              {(apiStatus === 'error' || apiStatus === 'usage_exceeded') && (
                 <span className="text-red-500 flex items-center gap-1">
-                  <AlertCircle size={16} /> Error
+                  <AlertCircle size={16} /> {apiStatus === 'usage_exceeded' ? 'Limit Exceeded' : 'Error'}
                 </span>
               )}
             </div>
@@ -314,13 +320,17 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
 
         {/* Main Chat Area */}
         <main className="flex-1 flex flex-col">
-          {apiStatus === 'error' ? (
+          {apiStatus === 'error' || apiStatus === 'usage_exceeded' ? (
             <div className="flex-1 flex items-center justify-center p-8">
               <div className="text-center bg-red-900/30 p-6 rounded-lg max-w-md border border-red-800">
                 <AlertCircle size={48} className="text-red-500 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold text-red-400 mb-2">API Connection Error</h2>
+                <h2 className="text-xl font-semibold text-red-400 mb-2">
+                  {apiStatus === 'usage_exceeded' ? 'Service Limit Exceeded' : 'API Connection Error'}
+                </h2>
                 <p className="text-gray-300 mb-4">
-                  Unable to connect to the Gemini API. Please check your API key and internet connection.
+                  {apiStatus === 'usage_exceeded'
+                    ? "Your Netlify account has exceeded its free usage limits for Serverless Functions. Please upgrade your Netlify plan or wait until the next billing cycle."
+                    : "Unable to connect to the Gemini API. Please check your API key and internet connection."}
                 </p>
                 <button 
                   onClick={() => window.location.reload()}
@@ -367,7 +377,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
               <ChatInput 
                 onSendMessage={handleSendMessage} 
                 isLoading={isLoading} 
-                isDisabled={apiStatus === 'error'} 
+                isDisabled={apiStatus === 'error' || apiStatus === 'usage_exceeded'}
               />
             </>
           )}
