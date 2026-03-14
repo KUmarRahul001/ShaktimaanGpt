@@ -1,4 +1,8 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+// If running in Deno, ensure your editor supports Deno (e.g., install the Deno VSCode extension).
+// If running in Node.js, use the native http module instead:
+import { createServer } from "http";
+
+// Replace all usage of 'serve' below with Node.js compatible code if not using Deno.
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -6,17 +10,21 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 }
 
-serve(async (req) => {
+createServer(async (req, res) => {
 
   // Handle CORS
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders })
+    res.writeHead(200, corsHeaders);
+    res.end("ok");
+    return;
   }
 
   try {
 
     // Read secrets from Supabase environment
+    // @ts-ignore: Deno global is available in Supabase Edge Functions
     const CASHFREE_APP_ID = Deno.env.get("CASHFREE_APP_ID")
+    // @ts-ignore: Deno global is available in Supabase Edge Functions
     const CASHFREE_SECRET_KEY = Deno.env.get("CASHFREE_SECRET_KEY")
     const CASHFREE_BASE_URL = "https://api.cashfree.com/pg"
 

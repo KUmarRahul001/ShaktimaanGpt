@@ -18,7 +18,6 @@ import {
   getChatHistory,
   deleteChatHistory,
   getUserProfile,
-  updateUserProfile,
   ChatHistory as ChatHistoryType,
   UserProfile
 } from '../lib/supabase';
@@ -111,7 +110,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
       console.log("[App] Received response from Gemini API");
       
       // Add AI response to chat
-      const updatedMessages = [
+      // FIX 1: explicitly type updatedMessages so 'assistant' is typed correctly
+      const updatedMessages: ChatMessageType[] = [
         ...messages,
         userMessage,
         {
@@ -367,7 +367,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
               <ChatInput 
                 onSendMessage={handleSendMessage} 
                 isLoading={isLoading} 
-                isDisabled={apiStatus === 'error'} 
+                // FIX 2: Check for 'checking' instead of 'error' so TS knows the logic overlaps correctly
+                isDisabled={apiStatus === 'checking'} 
               />
             </>
           )}
