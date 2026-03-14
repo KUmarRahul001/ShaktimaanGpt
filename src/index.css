@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+body {
+  @apply bg-black text-white;
+}
+
+/* Typography */
+.markdown-content {
+  @apply text-white;
+}
+
+.markdown-content th {
+  @apply text-left;
+}
+
+.markdown-content img {
+  @apply max-w-full h-auto my-4 rounded;
+}
+
+.markdown-content hr {
+  @apply my-4 border-t border-gray-700;
+}
+
+/* Form elements */
+.input-dark {
+  @apply bg-black/50 border border-gray-700 text-white rounded-lg p-3 
+         focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent 
+         transition-all duration-300;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded-lg 
+         transition-all duration-300 transform hover:scale-105;
+}
+
+.btn-secondary {
+  @apply bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg 
+         border border-gray-700 transition-all duration-300 transform hover:scale-105;
+}
+
+.btn-outline {
+  @apply bg-transparent border border-purple-400 text-purple-400 hover:bg-purple-400 
+         hover:text-black font-medium py-2 px-4 rounded-lg transition-all duration-300 
+         transform hover:scale-105;
+}
+
+/* Neon effects */
+.neon-text {
+  @apply text-neon-purple;
+  text-shadow: 0 0 5px rgba(157, 0, 255, 0.5), 
+               0 0 10px rgba(157, 0, 255, 0.3),
+               0 0 15px rgba(157, 0, 255, 0.2);
+}
+
+.neon-white-text {
+  @apply text-white;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 
+               0 0 10px rgba(255, 255, 255, 0.5),
+               0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.neon-purple-text {
+  @apply text-neon-purple;
+  text-shadow: 0 0 5px rgba(157, 0, 255, 0.7), 
+               0 0 10px rgba(157, 0, 255, 0.5),
+               0 0 15px rgba(157, 0, 255, 0.3);
+}
+
+/* Glass effect */
+.glass-effect {
+  @apply bg-black/60 backdrop-blur-lg border border-gray-800/50 
+         transition-all duration-300;
+}
+
+/* Background patterns */
+.illuminati-pattern {
+  background-image: radial-gradient(rgba(157, 0, 255, 0.1) 1px, transparent 1px), 
+                    radial-gradient(rgba(157, 0, 255, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  @apply bg-black;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typewriter 2s steps(40, end) forwards;
+}
+
+/* Loading animations */
+.loading-dots div {
+  @apply w-2 h-2 rounded-full bg-neon-purple;
+  animation: loading-dots 1.4s infinite ease-in-out both;
+}
+
+.loading-dots div:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots div:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes loading-dots {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* Hover effects */
+.hover-lift {
+  @apply transition-transform duration-300 ease-out;
+}
+
+.hover-lift:hover {
+  @apply transform -translate-y-1;
+}
+
+/* Responsive design helpers */
+.responsive-grid {
+  @apply grid gap-4;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Chat message animations */
+.message-appear {
+  animation: messageAppear 0.5s ease-out forwards;
+}
+
+@keyframes messageAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Chakra logo glow effect */
+.chakra-glow {
+  filter: drop-shadow(0 0 5px rgba(157, 0, 255, 0.5))
+          drop-shadow(0 0 10px rgba(157, 0, 255, 0.3));
+}

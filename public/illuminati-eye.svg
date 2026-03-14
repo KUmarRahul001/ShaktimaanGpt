@@ -1,0 +1,25 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="#121212" stroke="#9D00FF" stroke-width="2" />
+  
+  <!-- Chakra circles -->
+  <circle cx="50" cy="50" r="40" fill="transparent" stroke="#FF0000" stroke-width="2" stroke-opacity="0.7" />
+  <circle cx="50" cy="50" r="35" fill="transparent" stroke="#FFA500" stroke-width="2" stroke-opacity="0.7" />
+  <circle cx="50" cy="50" r="30" fill="transparent" stroke="#FFFF00" stroke-width="2" stroke-opacity="0.7" />
+  <circle cx="50" cy="50" r="25" fill="transparent" stroke="#00FF00" stroke-width="2" stroke-opacity="0.7" />
+  <circle cx="50" cy="50" r="20" fill="transparent" stroke="#00FFFF" stroke-width="2" stroke-opacity="0.7" />
+  <circle cx="50" cy="50" r="15" fill="transparent" stroke="#0000FF" stroke-width="2" stroke-opacity="0.7" />
+  <circle cx="50" cy="50" r="10" fill="transparent" stroke="#9D00FF" stroke-width="2" stroke-opacity="0.7" />
+  
+  <!-- Central dot -->
+  <circle cx="50" cy="50" r="5" fill="#9D00FF" />
+  
+  <!-- Lotus petals -->
+  <path d="M50 50 L75 50 Q85 50 50 50" stroke="#FF0000" stroke-width="1.5" fill="none" />
+  <path d="M50 50 L67.5 67.5 Q75 75 50 50" stroke="#FFA500" stroke-width="1.5" fill="none" />
+  <path d="M50 50 L50 75 Q50 85 50 50" stroke="#FFFF00" stroke-width="1.5" fill="none" />
+  <path d="M50 50 L32.5 67.5 Q25 75 50 50" stroke="#00FF00" stroke-width="1.5" fill="none" />
+  <path d="M50 50 L25 50 Q15 50 50 50" stroke="#00FFFF" stroke-width="1.5" fill="none" />
+  <path d="M50 50 L32.5 32.5 Q25 25 50 50" stroke="#0000FF" stroke-width="1.5" fill="none" />
+  <path d="M50 50 L50 25 Q50 15 50 50" stroke="#9D00FF" stroke-width="1.5" fill="none" />
+</svg>
