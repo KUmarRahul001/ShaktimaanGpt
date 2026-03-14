@@ -8,48 +8,53 @@ The project is designed to be **production-ready, scalable, and deployable using
 
 ---
 
-## 2. Key Features
+# 2. Key Features
 
-*   **AI chatbot conversations**: Interact intelligently with advanced language models.
-*   **Free user daily conversation limit**: Cap usage at 10 messages per day for free-tier users.
-*   **Pro subscription for unlimited AI usage**: Unlocked through a one-time seamless payment.
-*   **Secure authentication via Supabase**: Reliable user registration, login, and session management.
-*   **Cashfree payment integration for Pro upgrades**: Integrated payment flow for subscribing.
-*   **Supabase Edge Functions for backend logic**: Securely handles payment creation and verification.
-*   **Conversation history storage**: Seamlessly tracks your past interactions.
-*   **Responsive UI built with React + Tailwind**: Modern, mobile-first design.
-*   **Serverless deployment support**: Engineered to deploy on edge networks.
-*   **Cloudflare / Netlify compatible build**: Easy hosting on modern edge platforms.
-
----
-
-## 3. Technology Stack
-
-**Frontend**
-*   React
-*   Vite
-*   TailwindCSS
-*   TypeScript
-
-**Backend / Serverless**
-*   Supabase Edge Functions
-*   Supabase PostgreSQL
-*   Supabase Auth
-*   Supabase Storage
-
-**AI Integration**
-*   Gemini API (Google Generative AI)
-
-**Payments**
-*   Cashfree Payment Gateway
-
-**Infrastructure**
-*   Cloudflare Pages / Workers
-*   Netlify (optional deployment)
+* **AI chatbot conversations** – interact with advanced language models.
+* **Free user daily conversation limit** – 10 AI messages per day.
+* **Pro subscription for unlimited AI usage**
+* **Secure authentication via Supabase**
+* **Cashfree payment integration for Pro upgrades**
+* **Supabase Edge Functions for backend logic**
+* **Conversation history storage**
+* **Responsive UI built with React + Tailwind**
+* **Serverless deployment support**
+* **Cloudflare / Netlify compatible build**
 
 ---
 
-## 4. Project Structure
+# 3. Technology Stack
+
+## Frontend
+
+* React
+* Vite
+* TailwindCSS
+* TypeScript
+
+## Backend / Serverless
+
+* Supabase Edge Functions
+* Supabase PostgreSQL
+* Supabase Auth
+* Supabase Storage
+
+## AI Integration
+
+* Google **Gemini API**
+
+## Payments
+
+* **Cashfree Payment Gateway**
+
+## Infrastructure
+
+* Cloudflare Pages / Workers
+* Netlify
+
+---
+
+# 4. Project Structure
 
 ```
 src/
@@ -57,173 +62,357 @@ src/
   pages/            # Main application pages
   lib/              # Utility libraries and API integrations
   hooks/            # Custom React hooks
-  styles/           # Global styles and tailwind configuration
+  styles/           # Global styles and Tailwind configuration
 
 supabase/
-  functions/        # Supabase Edge Functions (Deno/TypeScript)
+  functions/        # Supabase Edge Functions
   migrations/       # Database schemas and seed data
 
-public/             # Static assets like images and icons
+public/             # Static assets
 ```
 
-**Key Files & Directories:**
-*   `src/lib/supabase.ts`: Initializes the Supabase client for authentication and database interactions.
-*   `src/lib/cashfree.ts`: Handles requests to the backend for creating and verifying Cashfree payment orders.
-*   `supabase/functions/create-payment`: An Edge Function that securely calls the Cashfree API to generate an order session.
-*   `supabase/functions/verify-payment`: An Edge Function that validates the payment status with Cashfree after a user completes the checkout.
+### Important Files
+
+**src/lib/supabase.ts**
+Initializes Supabase client for authentication and database access.
+
+**src/lib/cashfree.ts**
+Handles communication with Supabase Edge Functions for payment creation and verification.
+
+**supabase/functions/create-payment**
+Creates Cashfree payment order.
+
+**supabase/functions/verify-payment**
+Verifies payment status and upgrades user to Pro.
 
 ---
 
-## 5. Environment Variables
+# 5. Environment Variables
 
-To run the project locally, you must configure the following environment variables. Create a `.env` file in the root directory (you can copy from a `.env.example` if available).
+Create a `.env` file in the project root.
 
-```env
-# Frontend Supabase keys (safe to expose to the client)
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+Example:
 
-# Supabase Service Role (backend only, keep secret)
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+```
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
 
-# AI Provider integration
-VITE_GEMINI_API_KEY=your_gemini_api_key
+SUPABASE_SERVICE_ROLE_KEY=
 
-# Payment Gateway Configuration
-CASHFREE_APP_ID=your_cashfree_app_id
-CASHFREE_SECRET_KEY=your_cashfree_secret_key
+VITE_GEMINI_API_KEY=
+
+CASHFREE_APP_ID=
+CASHFREE_SECRET_KEY=
 ```
 
-*   `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY`: Used by the React client to talk to Supabase.
-*   `SUPABASE_SERVICE_ROLE_KEY`: Used securely in Edge Functions for admin-level database operations.
-*   `VITE_GEMINI_API_KEY`: Used to authenticate requests to Google's Generative AI.
-*   `CASHFREE_APP_ID` & `CASHFREE_SECRET_KEY`: Required by backend Edge Functions to create and verify payments.
+---
+
+# 6. How To Get API Keys (Step-by-Step)
+
+## 6.1 Supabase Setup
+
+1. Create an account
+   https://supabase.com
+
+2. Create a new project
+
+3. After project creation go to:
+
+```
+Settings → API
+```
+
+Copy the following:
+
+```
+Project URL → VITE_SUPABASE_URL
+Anon Public Key → VITE_SUPABASE_ANON_KEY
+Service Role Key → SUPABASE_SERVICE_ROLE_KEY
+```
+
+Docs:
+https://supabase.com/docs
 
 ---
 
-## 6. Installation & Setup
+## 6.2 Gemini AI API Key
 
-Follow these steps to set up the project locally:
+1. Go to Google AI Studio
+   https://aistudio.google.com
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository>
-    cd shaktimaan-gpt-chatbot
-    ```
+2. Login with Google account
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+3. Click **Get API Key**
 
-3.  **Set up environment variables:**
-    ```bash
-    cp .env.example .env
-    ```
-    *Open `.env` and fill in the required keys.*
+4. Create new key
 
-4.  **Start the development server:**
-    ```bash
-    npm run dev
-    ```
-    *The app will be available at `http://localhost:5173`.*
+Copy the key into:
+
+```
+VITE_GEMINI_API_KEY
+```
+
+Docs:
+https://ai.google.dev/docs
 
 ---
 
-## 7. Supabase Setup
+## 6.3 Cashfree Payment Gateway Setup
 
-To set up the Supabase backend (Database and Edge Functions):
+1. Create account
+   https://www.cashfree.com
 
-1.  **Create a Supabase project** at [supabase.com](https://supabase.com).
-2.  **Link your local project** (requires Supabase CLI):
-    ```bash
-    npx supabase login
-    npx supabase link --project-ref your-project-ref
-    ```
-3.  **Run database migrations** to set up tables and RLS policies:
-    ```bash
-    npx supabase db push
-    ```
-4.  **Deploy Edge Functions** to your project:
-    ```bash
-    npx supabase functions deploy create-payment --no-verify-jwt
-    npx supabase functions deploy verify-payment --no-verify-jwt
-    ```
-    *(Note: adjust `--no-verify-jwt` depending on your exact auth setup for functions)*
+2. Go to **Dashboard**
 
----
+3. Navigate to:
 
-## 8. AI Usage Limits
+```
+Developers → API Keys
+```
 
-To manage API costs and prevent abuse, the platform implements a dual-tier usage model tracked in the database:
+4. Copy credentials:
 
-**Free Users**
-*   Capped at **10 AI conversations/messages per day**.
-*   Usage is tracked in a Supabase table (`ai_usage`) based on the user's ID and the current date.
+```
+App ID → CASHFREE_APP_ID
+Secret Key → CASHFREE_SECRET_KEY
+```
 
-**Pro Users**
-*   Enjoy **unlimited conversations**.
-*   Users gain this status when their `is_pro` flag is set to `true` in their profile after a successful Cashfree payment.
+5. Choose environment:
+
+Sandbox (for testing)
+Production (for live payments)
+
+Docs:
+https://docs.cashfree.com
 
 ---
 
-## 9. Payment Flow
+# 7. Installation & Setup
 
-The application uses the Cashfree payment gateway to upgrade users to Pro. The architecture uses Edge Functions to keep secrets out of the frontend:
+## Step 1 — Clone Repository
+
+```
+git clone https://github.com/YOUR_USERNAME/shaktimaan-ai.git
+cd shaktimaan-ai
+```
+
+---
+
+## Step 2 — Install Dependencies
+
+```
+npm install
+```
+
+---
+
+## Step 3 — Create Environment File
+
+```
+cp .env.example .env
+```
+
+Then edit `.env` and paste your API keys.
+
+---
+
+## Step 4 — Install Supabase CLI
+
+```
+npm install -g supabase
+```
+
+Login:
+
+```
+supabase login
+```
+
+Docs:
+https://supabase.com/docs/guides/cli
+
+---
+
+## Step 5 — Link Supabase Project
+
+```
+supabase link --project-ref YOUR_PROJECT_ID
+```
+
+You can find the project ID in:
+
+```
+Supabase Dashboard → Settings → General
+```
+
+---
+
+## Step 6 — Run Database Migrations
+
+```
+supabase db push
+```
+
+This creates all required tables such as:
+
+* profiles
+* ai_usage
+* messages
+* payments
+* conversations
+
+---
+
+## Step 7 — Deploy Edge Functions
+
+```
+supabase functions deploy create-payment
+supabase functions deploy verify-payment
+```
+
+---
+
+## Step 8 — Start Development Server
+
+```
+npm run dev
+```
+
+App runs at:
+
+```
+http://localhost:5173
+```
+
+---
+
+# 8. AI Usage Limits
+
+To control API usage and cost:
+
+## Free Users
+
+* 10 AI messages per day
+
+## Pro Users
+
+* Unlimited AI messages
+
+Usage is stored in:
+
+```
+ai_usage
+```
+
+Database fields:
+
+```
+user_id
+date
+conversation_count
+```
+
+---
+
+# 9. Payment Flow (Cashfree)
 
 ```
 User clicks Upgrade
-       ↓
-Frontend calls 'create-payment' edge function
-       ↓
-Edge function calls Cashfree API & Order is created
-       ↓
-User is redirected to the Cashfree checkout page
-       ↓
-Payment is completed by the user
-       ↓
-Frontend calls 'verify-payment' edge function
-       ↓
-Edge function validates with Cashfree and updates DB
-       ↓
-User upgraded to Pro (is_pro = true)
+      ↓
+Frontend calls create-payment
+      ↓
+Supabase Edge Function creates order
+      ↓
+Cashfree checkout page opens
+      ↓
+User completes payment
+      ↓
+verify-payment function validates payment
+      ↓
+Database updated → user becomes Pro
 ```
 
 ---
 
-## 10. Deployment
+# 10. Deployment
 
-This project is built to be serverless compatible and can be deployed easily to modern edge platforms.
+## Cloudflare Pages
 
-**Cloudflare Pages**
-To build and deploy using Wrangler:
-```bash
+Install Wrangler:
+
+```
+npm install -g wrangler
+```
+
+Deploy:
+
+```
 npm run build
 npm run deploy
 ```
 
-**Netlify**
-To deploy on Netlify, use their CLI or connect your Git repository. The build command is:
-```bash
+Docs:
+https://developers.cloudflare.com/pages
+
+---
+
+## Netlify
+
+Connect your GitHub repository to Netlify.
+
+Build command:
+
+```
 npm run build
 ```
 
-The output directory is `dist`.
+Publish directory:
+
+```
+dist
+```
+
+Docs:
+https://docs.netlify.com
 
 ---
 
-## 11. Contributing
+# 11. Contributing
 
-We welcome contributions! To help improve the project:
+1. Fork the repository
+2. Create a new branch
 
-1.  Fork the repository.
-2.  Create a feature branch (`git checkout -b feature/amazing-feature`).
-3.  Commit your changes (`git commit -m 'Add amazing feature'`).
-4.  Push to the branch (`git push origin feature/amazing-feature`).
-5.  Submit a Pull Request.
+```
+git checkout -b feature/your-feature
+```
+
+3. Commit your changes
+
+```
+git commit -m "Add new feature"
+```
+
+4. Push to branch
+
+```
+git push origin feature/your-feature
+```
+
+5. Open a Pull Request
 
 ---
 
-## 12. License
+# 12. Security Notes
+
+* Never commit `.env` file
+* Keep `SUPABASE_SERVICE_ROLE_KEY` secret
+* Use Cashfree **Sandbox mode** for testing
+* Rotate API keys if exposed
+
+---
+
+# 13. License
 
 MIT License
+
+You are free to use, modify, and distribute this software under the terms of the MIT License.
