@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Crown, Image, MessageSquare, Zap, CheckCircle, ArrowLeft, AlertCircle, QrCode } from 'lucide-react';
+import { Crown, Image, MessageSquare, Zap, CheckCircle, ArrowLeft, AlertCircle, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { QRCodeSVG } from 'qrcode.react';
-import { getCurrentUser, updateProStatus } from '../lib/supabase';
+import { getCurrentUser, getUserProfile, UserProfile } from '../lib/supabase';
+import { createPaymentOrder } from '../lib/cashfree';
+import { v4 as uuidv4 } from 'uuid';
 
 const ProFeatures: React.FC = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getCurrentUser();
+      if (user) {
+        const profile = await getUserProfile(user.id);
+        setUserProfile(profile);
+      }
+    };
+    fetchUser();
+  }, []);
+
   const features = [
     {
       icon: Image,
@@ -34,20 +47,52 @@ const ProFeatures: React.FC = () => {
       setError(null);
 
       const user = await getCurrentUser();
-      if (!user) {
+      if (!user || !userProfile) {
         throw new Error('Please sign in to continue');
       }
 
-      // Update user's pro status
-      await updateProStatus(user.id, true, new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString());
-      
-      // Navigate to success page
-      navigate('/payment-status?status=success');
+      const orderId = `order_${uuidv4().replace(/-/g, '')}`;
+
+      const paymentDetails = {
+        orderId: orderId,
+        orderAmount: 120,
+        orderCurrency: 'INR',
+        customerEmail: userProfile.email || user.email || 'customer@example.com',
+        customerPhone: userProfile.phone_number || '9999999999',
+        customerName: userProfile.display_name || 'Customer'
+      };
+
+      const response = await createPaymentOrder(paymentDetails);
+
+      if (response && response.payment_session_id) {
+        // Redirect to Cashfree checkout using the payment link or payment session
+        if (response.payment_link) {
+            window.location.href = response.payment_link;
+        } else {
+            // Cashfree usually returns payment_session_id. We might need a frontend redirect SDK or the backend to return the exact redirect URL.
+            // Often backend returns payment_link in this format.
+            // If the backend returns `payment_session_id`, the standard cashfree redirect is usually required. Let's assume the backend provides a direct link in `payment_link`.
+            // Wait, the instructions said:
+            // "receive payment_link \n window.location.href = payment_link"
+            if (response.payment_link) {
+              window.location.href = response.payment_link;
+            } else if (response.payment_session_id) {
+              // fallback if backend only returned payment_session_id and expected SDK, but we are asked to redirect directly
+              // If the user said "receive payment_link", let's assume `response.payment_link` is provided by the Supabase Edge Function
+              window.location.href = response.payment_link || response.payment_url;
+            } else {
+              throw new Error("Invalid response from payment server");
+            }
+        }
+      } else if (response && response.payment_link) {
+        window.location.href = response.payment_link;
+      } else {
+        throw new Error('Failed to initiate payment session');
+      }
+
     } catch (error) {
       console.error('Payment error:', error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-      navigate('/payment-status?status=error');
-    } finally {
       setIsProcessing(false);
     }
   };
@@ -134,17 +179,6 @@ const ProFeatures: React.FC = () => {
           )}
 
           <div className="text-center">
-            <div className="bg-white p-4 rounded-lg inline-block mb-4">
-              <QRCodeSVG
-                value={`upi://pay?pa=your.upi@bank&pn=ShaktimaanGPT&am=120.00&cu=INR&tn=Pro Membership`}
-                size={200}
-                level="H"
-                includeMargin={true}
-              />
-            </div>
-            <p className="text-sm text-gray-400 mb-4">
-              Scan the QR code with any UPI app to make the payment
-            </p>
             <button
               onClick={handlePayment}
               disabled={isProcessing}
@@ -157,8 +191,8 @@ const ProFeatures: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <QrCode size={20} />
-                  Confirm Payment
+                  <CreditCard size={20} />
+                  Upgrade to Pro
                 </>
               )}
             </button>

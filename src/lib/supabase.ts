@@ -271,6 +271,70 @@ export async function deleteChatHistory(chatId: string) {
   if (error) throw error
 }
 
+/* ---------------- AI USAGE ---------------- */
+
+export async function checkAIUsageLimit(userId: string): Promise<boolean> {
+  const today = new Date().toISOString().split('T')[0];
+
+  try {
+    const { data, error } = await supabase
+      .from('ai_usage')
+      .select('conversation_count')
+      .eq('user_id', userId)
+      .eq('date', today)
+      .maybeSingle();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error checking AI usage:', error);
+      // Fail open if there's a DB error so we don't break existing functionality
+      return true;
+    }
+
+    if (data && data.conversation_count >= 10) {
+      return false; // Limit reached
+    }
+
+    return true; // Allowed
+  } catch (err) {
+    console.error('Error in checkAIUsageLimit:', err);
+    return true;
+  }
+}
+
+export async function incrementAIUsage(userId: string): Promise<void> {
+  const today = new Date().toISOString().split('T')[0];
+
+  try {
+    const { data, error } = await supabase
+      .from('ai_usage')
+      .select('conversation_count')
+      .eq('user_id', userId)
+      .eq('date', today)
+      .maybeSingle();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error fetching current AI usage:', error);
+      return;
+    }
+
+    if (data) {
+      // Update existing record
+      await supabase
+        .from('ai_usage')
+        .update({ conversation_count: data.conversation_count + 1 })
+        .eq('user_id', userId)
+        .eq('date', today);
+    } else {
+      // Insert new record
+      await supabase
+        .from('ai_usage')
+        .insert([{ user_id: userId, date: today, conversation_count: 1 }]);
+    }
+  } catch (err) {
+    console.error('Error in incrementAIUsage:', err);
+  }
+}
+
 /* ---------------- ACCOUNT DELETE ---------------- */
 
 export async function deleteUserAccount(userId: string) {
