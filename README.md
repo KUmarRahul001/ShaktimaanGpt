@@ -1,0 +1,3 @@
+# ShaktiMaanGpt
+
+Welcome to ShaktiMaanGpt!
