@@ -65,20 +65,12 @@ const ProFeatures: React.FC = () => {
       const response = await createPaymentOrder(paymentDetails);
 
       if (response && response.payment_session_id) {
-        // Redirect to Cashfree checkout using the payment link or payment session
         if (response.payment_link) {
             window.location.href = response.payment_link;
         } else {
-            // Cashfree usually returns payment_session_id. We might need a frontend redirect SDK or the backend to return the exact redirect URL.
-            // Often backend returns payment_link in this format.
-            // If the backend returns `payment_session_id`, the standard cashfree redirect is usually required. Let's assume the backend provides a direct link in `payment_link`.
-            // Wait, the instructions said:
-            // "receive payment_link \n window.location.href = payment_link"
             if (response.payment_link) {
               window.location.href = response.payment_link;
             } else if (response.payment_session_id) {
-              // fallback if backend only returned payment_session_id and expected SDK, but we are asked to redirect directly
-              // If the user said "receive payment_link", let's assume `response.payment_link` is provided by the Supabase Edge Function
               window.location.href = response.payment_link || response.payment_url;
             } else {
               throw new Error("Invalid response from payment server");
