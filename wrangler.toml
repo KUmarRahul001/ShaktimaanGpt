@@ -1,0 +1,5 @@
+name = "shaktimaan-gpt"
+compatibility_date = "2024-03-14"
+
+[assets]
+directory = "./dist"
