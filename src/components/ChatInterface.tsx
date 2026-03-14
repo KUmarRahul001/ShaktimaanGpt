@@ -7,7 +7,6 @@ import ChatInput from './ChatInput';
 import ChatHistory from './ChatHistory';
 import IlluminatiLogo from './IlluminatiLogo';
 import ProfileMenu from './ProfileMenu';
-import ERDiagramButton from './ERDiagramButton';
 import { generateResponse, verifyGeminiConnection, ChatMessage as ChatMessageType } from '../lib/gemini';
 import { 
   getCurrentUser, 
@@ -18,6 +17,8 @@ import {
   getChatHistory,
   deleteChatHistory,
   getUserProfile,
+  checkAIUsageLimit,
+  incrementAIUsage,
   ChatHistory as ChatHistoryType,
   UserProfile
 } from '../lib/supabase';
@@ -104,11 +105,32 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
 
     try {
       console.log("[App] Sending message to Gemini API");
+
+      // Check AI usage limits for free users before proceeding
+      if (user && userProfile && !userProfile.is_pro) {
+        const isAllowed = await checkAIUsageLimit(user.id);
+        if (!isAllowed) {
+          setIsLoading(false);
+          setMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: 'Daily limit reached. Upgrade to Pro for unlimited AI usage.'
+            }
+          ]);
+          return;
+        }
+      }
       
       // Send all messages to get context-aware responses
       const response = await generateResponse([...messages, userMessage]);
       console.log("[App] Received response from Gemini API");
       
+      // Increment AI usage
+      if (user && userProfile && !userProfile.is_pro) {
+        await incrementAIUsage(user.id);
+      }
+
       // Add AI response to chat
       // FIX 1: explicitly type updatedMessages so 'assistant' is typed correctly
       const updatedMessages: ChatMessageType[] = [
@@ -306,9 +328,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
               onDeleteChat={handleDeleteChat}
               onNewChat={handleNewChat}
             />
-            <div className="p-4 border-t border-gray-800">
-              <ERDiagramButton />
-            </div>
           </div>
         </div>
 
