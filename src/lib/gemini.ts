@@ -4,6 +4,7 @@ import {
   HarmBlockThreshold,
   Content
 } from "@google/generative-ai";
+import { timeoutPromise } from "./timeout";
 
 /* ---------------------------------- */
 /* Environment Setup */
@@ -72,18 +73,6 @@ function formatMessagesForGemini(messages: ChatMessage[]): Content[] {
     role: msg.role === "user" ? "user" : "model",
     parts: [{ text: msg.content }]
   }));
-}
-
-/* ---------------------------------- */
-/* Timeout Utility */
-/* ---------------------------------- */
-
-function timeoutPromise<T>(promise: Promise<T>, ms: number): Promise<T> {
-  const timeout = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error("Request timeout")), ms)
-  );
-
-  return Promise.race([promise, timeout]);
 }
 
 /* ---------------------------------- */
