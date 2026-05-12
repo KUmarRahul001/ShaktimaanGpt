@@ -92,7 +92,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
   }, [messages, scrollToBottom]);
 
   const handleSendMessage = async (content: string) => {
-    if (!content.trim() || apiStatus === 'error') return;
+    if (!content.trim() || apiStatus !== 'connected') return;
     
     const userMessage: ChatMessageType = {
       role: 'user',
@@ -386,8 +386,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onLogout }) => {
               <ChatInput 
                 onSendMessage={handleSendMessage} 
                 isLoading={isLoading} 
-                // FIX 2: Check for 'checking' instead of 'error' so TS knows the logic overlaps correctly
-                isDisabled={apiStatus === 'checking'} 
+                // isDisabled is true if not connected. ChatInput handles message/style based on apiStatus.
+                isDisabled={apiStatus !== 'connected'}
+                apiStatus={apiStatus}
               />
             </>
           )}
