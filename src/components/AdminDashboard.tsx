@@ -79,9 +79,10 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const lowerSearchTerm = searchTerm.toLowerCase();
   const filteredUsers = users.filter(user => 
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.display_name?.toLowerCase().includes(searchTerm.toLowerCase())
+    user.email.toLowerCase().includes(lowerSearchTerm) ||
+    user.display_name?.toLowerCase().includes(lowerSearchTerm)
   );
 
   return (
