@@ -5,7 +5,8 @@ import { createServer } from "http";
 // Replace all usage of 'serve' below with Node.js compatible code if not using Deno.
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  // @ts-ignore: Deno global is available in Supabase Edge Functions
+  "Access-Control-Allow-Origin": Deno.env.get("ALLOWED_ORIGIN") || "http://localhost:5173",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 }
