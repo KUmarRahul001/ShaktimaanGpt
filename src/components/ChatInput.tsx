@@ -9,6 +9,7 @@ interface ChatInputProps {
   isDisabled?: boolean;
   isPro?: boolean;
   userId?: string;
+  apiStatus?: 'checking' | 'connected' | 'error';
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({ 
@@ -16,7 +17,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
   isLoading, 
   isDisabled = false,
   isPro = false,
-  userId
+  userId,
+  apiStatus = 'connected'
 }) => {
   const [input, setInput] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -80,9 +82,17 @@ const ChatInput: React.FC<ChatInputProps> = ({
       transition={{ duration: 0.3 }}
     >
       {isDisabled && (
-        <div className="mb-3 p-2 bg-red-900/30 border border-red-800 rounded-md flex items-center gap-2 text-red-300 text-sm">
+        <div className={`mb-3 p-2 border rounded-md flex items-center gap-2 text-sm ${
+          apiStatus === 'error'
+            ? "bg-red-900/30 border-red-800 text-red-300"
+            : "bg-yellow-900/30 border-yellow-800 text-yellow-300"
+        }`}>
           <AlertCircle size={16} />
-          <span>API connection error. Chat functionality is disabled.</span>
+          <span>
+            {apiStatus === 'error'
+              ? "API connection error. Chat functionality is disabled."
+              : "Checking API connection... Chat will be enabled shortly."}
+          </span>
         </div>
       )}
 
@@ -124,10 +134,16 @@ const ChatInput: React.FC<ChatInputProps> = ({
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={isDisabled ? "API connection error" : "Ask ShaktimaanGpt anything..."}
+          placeholder={
+            isDisabled
+              ? (apiStatus === 'error' ? "API connection error" : "Checking connection...")
+              : "Ask ShaktimaanGpt anything..."
+          }
           className={`flex-1 p-3 rounded-lg ${
             isDisabled 
-              ? "border-red-800 bg-red-900/30 text-red-300 placeholder-red-700" 
+              ? (apiStatus === 'error'
+                  ? "border-red-800 bg-red-900/30 text-red-300 placeholder-red-700"
+                  : "border-yellow-800 bg-yellow-900/30 text-yellow-300 placeholder-yellow-700")
               : "bg-dark-surface-2 border border-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-transparent"
           }`}
           disabled={isLoading || isDisabled || isUploading}
